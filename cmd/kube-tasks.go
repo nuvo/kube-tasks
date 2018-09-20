@@ -29,6 +29,7 @@ func NewRootCmd(args []string) *cobra.Command {
 
 	cmd.AddCommand(NewSimpleBackupCmd(out))
 	cmd.AddCommand(NewWaitForPodsCmd(out))
+	cmd.AddCommand(NewExecuteCmd(out))
 
 	return cmd
 }
@@ -100,6 +101,39 @@ func NewWaitForPodsCmd(out io.Writer) *cobra.Command {
 	f.StringVarP(&w.namespace, "namespace", "n", "", "namespace to find pods")
 	f.StringVarP(&w.selector, "selector", "l", "", "selector to filter on")
 	f.IntVarP(&w.replicas, "replicas", "r", 1, "number of ready replicas to wait for")
+
+	return cmd
+}
+
+type execCmd struct {
+	namespace string
+	selector  string
+	container string
+	command   string
+
+	out io.Writer
+}
+
+// NewExecuteCmd executes a simple command in a container
+func NewExecuteCmd(out io.Writer) *cobra.Command {
+	e := &execCmd{out: out}
+
+	cmd := &cobra.Command{
+		Use:   "execute",
+		Short: "Execute a command in a container. Only executes the command in the first pod",
+		Long:  ``,
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := kubetasks.Execute(e.namespace, e.selector, e.container, e.command); err != nil {
+				log.Fatal(err)
+			}
+		},
+	}
+	f := cmd.Flags()
+
+	f.StringVarP(&e.namespace, "namespace", "n", "", "namespace to find pods")
+	f.StringVarP(&e.selector, "selector", "l", "", "selector to filter on")
+	f.StringVarP(&e.container, "container", "c", "", "container name to act on")
+	f.StringVar(&e.command, "command", "", "command to execute in container")
 
 	return cmd
 }

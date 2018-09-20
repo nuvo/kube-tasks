@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/maorfr/kube-tasks/pkg/utils"
@@ -70,4 +71,39 @@ func WaitForPods(namespace, selector string, desiredReplicas int) error {
 		time.Sleep(10 * time.Second)
 	}
 	return nil
+}
+
+// Execute executes simple commands in a container
+func Execute(namespace, selector, container, command string) error {
+	log.Println("Getting clients")
+	k8sClient, err := skbn.GetClientToK8s()
+	if err != nil {
+		return err
+	}
+
+	log.Println("Getting pods")
+	pods, err := utils.GetReadyPods(k8sClient, namespace, selector)
+	if err != nil {
+		return err
+	}
+
+	commandArray := strings.Fields(command)
+	stdout, stderr, err := skbn.Exec(*k8sClient, namespace, pods[0], container, commandArray, nil)
+	if len(stderr) != 0 {
+		return fmt.Errorf("STDERR: " + (string)(stderr))
+	}
+	if err != nil {
+		return err
+	}
+
+	printOutput((string)(stdout), pods[0])
+	return nil
+}
+
+func printOutput(output, pod string) {
+	for _, line := range strings.Split(output, "\n") {
+		if line != "" {
+			log.Println(pod, line)
+		}
+	}
 }
