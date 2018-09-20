@@ -28,6 +28,7 @@ func NewRootCmd(args []string) *cobra.Command {
 	out := cmd.OutOrStdout()
 
 	cmd.AddCommand(NewSimpleBackupCmd(out))
+	cmd.AddCommand(NewWaitForPodsCmd(out))
 
 	return cmd
 }
@@ -67,6 +68,38 @@ func NewSimpleBackupCmd(out io.Writer) *cobra.Command {
 	f.StringVar(&b.dst, "dst", "", "destination to backup to. Example: s3://bucket/backup")
 	f.IntVarP(&b.parallel, "parallel", "p", 1, "number of files to copy in parallel. set this flag to 0 for full parallelism")
 	f.StringVar(&b.tag, "tag", utils.GetTimeStamp(), "tag to backup to. Default is Now (yyMMddHHmmss)")
+
+	return cmd
+}
+
+type waitForPods struct {
+	namespace string
+	selector  string
+	container string
+	replicas  int
+
+	out io.Writer
+}
+
+// NewWaitForPodsCmd waits for a given number of replicas
+func NewWaitForPodsCmd(out io.Writer) *cobra.Command {
+	w := &waitForPods{out: out}
+
+	cmd := &cobra.Command{
+		Use:   "wait-for-pods",
+		Short: "Wait for a given number of ready pods",
+		Long:  ``,
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := kubetasks.WaitForPods(w.namespace, w.selector, w.replicas); err != nil {
+				log.Fatal(err)
+			}
+		},
+	}
+	f := cmd.Flags()
+
+	f.StringVarP(&w.namespace, "namespace", "n", "", "namespace to find pods")
+	f.StringVarP(&w.selector, "selector", "l", "", "selector to filter on")
+	f.IntVarP(&w.replicas, "replicas", "r", 1, "number of ready replicas to wait for")
 
 	return cmd
 }
