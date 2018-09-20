@@ -64,7 +64,7 @@ func WaitForPods(namespace, selector string, desiredReplicas int) error {
 			return err
 		}
 		readyPods = len(pods)
-		log.Printf("Currently %d ready pods", readyPods)
+		log.Printf("Currently %d/%d ready pods", readyPods, desiredReplicas)
 		if readyPods == desiredReplicas {
 			break
 		}
