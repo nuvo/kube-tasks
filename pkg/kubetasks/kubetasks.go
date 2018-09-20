@@ -2,6 +2,7 @@ package kubetasks
 
 import (
 	"log"
+	"path/filepath"
 
 	"github.com/maorfr/kube-tasks/pkg/utils"
 	"github.com/maorfr/skbn/pkg/skbn"
@@ -11,6 +12,7 @@ import (
 func SimpleBackup(namespace, selector, container, path, dst string, parallel int, tag string) (string, error) {
 	log.Println("Backup started!")
 	dstPrefix, dstPath := utils.SplitInTwo(dst, "://")
+	dstPath = filepath.Join(dstPath, tag)
 
 	log.Println("Getting clients")
 	k8sClient, dstClient, err := skbn.GetClients("k8s", dstPrefix, "", dstPath)
@@ -25,12 +27,12 @@ func SimpleBackup(namespace, selector, container, path, dst string, parallel int
 	}
 
 	log.Println("Calculating paths. This may take a while...")
-	fromToPathsAllPods, err := utils.GetFromAndToPathsFromK8s(k8sClient, pods, namespace, container, tag, dstPath)
+	fromToPathsAllPods, err := utils.GetFromAndToPathsFromK8s(k8sClient, pods, namespace, container, path, dstPath)
 	if err != nil {
 		return "", err
 	}
 
-	log.Println("Starting files copy")
+	log.Println("Starting files copy to tag: " + tag)
 	if err := skbn.PerformCopy(k8sClient, dstClient, "k8s", dstPrefix, fromToPathsAllPods, parallel); err != nil {
 		return "", err
 	}

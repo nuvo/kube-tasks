@@ -1,11 +1,12 @@
-# Jeknins backup
+# Kube tools
 
-A backup and restore tool for Jenkins on Kubernetes.
+A tool to perform simple Kubernetes related actions
 
 ## Commands
 
-### Backup
+### Simple Backup
 
+Example: Backup Jenkins
 ```
-jenkins-backup -n default -l release=jenkins -c jenkins --dst s3://nuvo-jenkins-data
+kube-tools simple-backup -n default -l release=jenkins -c jenkins --path /var/jenkins_home --dst s3://nuvo-jenkins-data
 ```
