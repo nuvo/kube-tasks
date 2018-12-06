@@ -1,6 +1,7 @@
 package kubetasks
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"path/filepath"
@@ -12,7 +13,7 @@ import (
 )
 
 // SimpleBackup performs backup
-func SimpleBackup(namespace, selector, container, path, dst string, parallel int, tag string) (string, error) {
+func SimpleBackup(namespace, selector, container, path, dst string, parallel int, tag string, bufferSize float64) (string, error) {
 	log.Println("Backup started!")
 	dstPrefix, dstPath := utils.SplitInTwo(dst, "://")
 	dstPath = filepath.Join(dstPath, tag)
@@ -40,7 +41,7 @@ func SimpleBackup(namespace, selector, container, path, dst string, parallel int
 	}
 
 	log.Println("Starting files copy to tag: " + tag)
-	if err := skbn.PerformCopy(k8sClient, dstClient, "k8s", dstPrefix, fromToPathsAllPods, parallel); err != nil {
+	if err := skbn.PerformCopy(k8sClient, dstClient, "k8s", dstPrefix, fromToPathsAllPods, parallel, bufferSize); err != nil {
 		return "", err
 	}
 
@@ -88,7 +89,8 @@ func Execute(namespace, selector, container, command string) error {
 	}
 
 	commandArray := strings.Fields(command)
-	stdout, stderr, err := skbn.Exec(*k8sClient, namespace, pods[0], container, commandArray, nil)
+	stdout := new(bytes.Buffer)
+	stderr, err := skbn.Exec(*k8sClient, namespace, pods[0], container, commandArray, nil, stdout)
 	if len(stderr) != 0 {
 		return fmt.Errorf("STDERR: " + (string)(stderr))
 	}
@@ -96,7 +98,7 @@ func Execute(namespace, selector, container, command string) error {
 		return err
 	}
 
-	printOutput((string)(stdout), pods[0])
+	printOutput(stdout.String(), pods[0])
 	return nil
 }
 

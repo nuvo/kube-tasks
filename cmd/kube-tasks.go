@@ -35,13 +35,14 @@ func NewRootCmd(args []string) *cobra.Command {
 }
 
 type simpleBackupCmd struct {
-	namespace string
-	selector  string
-	container string
-	path      string
-	dst       string
-	parallel  int
-	tag       string
+	namespace  string
+	selector   string
+	container  string
+	path       string
+	dst        string
+	parallel   int
+	tag        string
+	bufferSize float64
 
 	out io.Writer
 }
@@ -55,7 +56,7 @@ func NewSimpleBackupCmd(out io.Writer) *cobra.Command {
 		Short: "backup files to S3",
 		Long:  ``,
 		Run: func(cmd *cobra.Command, args []string) {
-			if _, err := kubetasks.SimpleBackup(b.namespace, b.selector, b.container, b.path, b.dst, b.parallel, b.tag); err != nil {
+			if _, err := kubetasks.SimpleBackup(b.namespace, b.selector, b.container, b.path, b.dst, b.parallel, b.tag, b.bufferSize); err != nil {
 				log.Fatal(err)
 			}
 		},
@@ -69,6 +70,7 @@ func NewSimpleBackupCmd(out io.Writer) *cobra.Command {
 	f.StringVar(&b.dst, "dst", "", "destination to backup to. Example: s3://bucket/backup")
 	f.IntVarP(&b.parallel, "parallel", "p", 1, "number of files to copy in parallel. set this flag to 0 for full parallelism")
 	f.StringVar(&b.tag, "tag", utils.GetTimeStamp(), "tag to backup to. Default is Now (yyMMddHHmmss)")
+	f.Float64VarP(&b.bufferSize, "buffer-size", "b", 6.75, "in-memory buffer size (in MB) to use for files copy (buffer per file_")
 
 	return cmd
 }
