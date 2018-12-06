@@ -1,8 +1,0 @@
-package: github.com/maorfr/kube-tasks
-import:
-- package: github.com/maorfr/skbn
-  version: 0.1.1
-  subpackages:
-  - pkg/skbn
-- package: github.com/spf13/cobra
-  version: v0.0.3
