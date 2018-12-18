@@ -1,12 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
 
-	"github.com/maorfr/kube-tasks/pkg/kubetasks"
-	"github.com/maorfr/kube-tasks/pkg/utils"
+	"github.com/nuvo/kube-tasks/pkg/kubetasks"
+	"github.com/nuvo/kube-tasks/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -30,6 +31,7 @@ func NewRootCmd(args []string) *cobra.Command {
 	cmd.AddCommand(NewSimpleBackupCmd(out))
 	cmd.AddCommand(NewWaitForPodsCmd(out))
 	cmd.AddCommand(NewExecuteCmd(out))
+	cmd.AddCommand(NewVersionCmd(out))
 
 	return cmd
 }
@@ -53,7 +55,7 @@ func NewSimpleBackupCmd(out io.Writer) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "simple-backup",
-		Short: "backup files to S3",
+		Short: "Backup files to cloud storage",
 		Long:  ``,
 		Run: func(cmd *cobra.Command, args []string) {
 			if _, err := kubetasks.SimpleBackup(b.namespace, b.selector, b.container, b.path, b.dst, b.parallel, b.tag, b.bufferSize); err != nil {
@@ -136,6 +138,27 @@ func NewExecuteCmd(out io.Writer) *cobra.Command {
 	f.StringVarP(&e.selector, "selector", "l", "", "selector to filter on")
 	f.StringVarP(&e.container, "container", "c", "", "container name to act on")
 	f.StringVar(&e.command, "command", "", "command to execute in container")
+
+	return cmd
+}
+
+var (
+	// GitTag stands for a git tag
+	GitTag string
+	// GitCommit stands for a git commit hash
+	GitCommit string
+)
+
+// NewVersionCmd prints version information
+func NewVersionCmd(out io.Writer) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "version",
+		Short: "Print version information",
+		Long:  ``,
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("Version %s (git-%s)\n", GitTag, GitCommit)
+		},
+	}
 
 	return cmd
 }

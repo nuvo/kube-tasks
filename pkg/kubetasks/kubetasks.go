@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/maorfr/kube-tasks/pkg/utils"
-	"github.com/maorfr/skbn/pkg/skbn"
+	"github.com/nuvo/kube-tasks/pkg/utils"
+	"github.com/nuvo/skbn/pkg/skbn"
 )
 
 // SimpleBackup performs backup

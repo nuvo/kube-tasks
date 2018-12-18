@@ -3,7 +3,7 @@ package utils
 import (
 	"path/filepath"
 
-	"github.com/maorfr/skbn/pkg/skbn"
+	"github.com/nuvo/skbn/pkg/skbn"
 )
 
 // GetFromAndToPathsFromK8s aggregates paths from all pods
