@@ -1,6 +1,6 @@
 # .goreleaser.yml
 builds:
-- main: cmd/skbn.go
+- main: cmd/kube-tasks.go
   binary: kube-tasks
   goos:
   - windows
