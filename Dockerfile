@@ -1,11 +1,8 @@
-FROM golang:1.10.3-alpine as builder
-WORKDIR /go/src/github.com/maorfr/kube-tasks/
-COPY . .
-RUN apk --no-cache add git make \
-    && make
-
 FROM alpine:3.8
 RUN apk --no-cache add ca-certificates
-WORKDIR /root/
-COPY --from=builder /go/src/github.com/maorfr/kube-tasks/bin/kube-tasks /usr/local/bin/kube-tasks
+COPY kube-tasks /usr/local/bin/kube-tasks
+RUN addgroup -g 1001 -S kube-tasks \
+    && adduser -u 1001 -D -S -G kube-tasks kube-tasks
+USER kube-tasks
+WORKDIR /home/kube-tasks
 CMD ["kube-tasks"]
