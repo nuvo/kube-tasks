@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/nuvo/kube-tasks)](https://goreportcard.com/report/github.com/nuvo/kube-tasks)
 [![license](https://img.shields.io/github/license/nuvo/kube-tasks.svg)](https://github.com/nuvo/kube-tasks/blob/master/LICENSE)
 
-# Kube tools
+# Kube tasks
 
 A tool to perform simple Kubernetes related actions
 
