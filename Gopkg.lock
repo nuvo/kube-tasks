@@ -18,7 +18,7 @@
   version = "0.3.0"
 
 [[projects]]
-  digest = "1:49f9d62ba765b7d638dc8abd4b68252dc511a1b8fe44a6697e94660bde541d2d"
+  digest = "1:79b9dae77b036f57734e82b257e19614bbba910afa119e70749b511aefe2b597"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -59,8 +59,8 @@
     "service/sts",
   ]
   pruneopts = "UT"
-  revision = "a21788f1964e28dc1e3932e595db6707ce8070cf"
-  version = "v1.16.7"
+  revision = "8d41be8a37391ddc4feb2d16f5ca6f440eb8b356"
+  version = "v1.16.8"
 
 [[projects]]
   digest = "1:49ea765e340f3907fc52ab1cc23bf9698d2d4fa9db14673710879d2ae2d22a9a"
@@ -282,7 +282,7 @@
     "windows",
   ]
   pruneopts = "UT"
-  revision = "dcdaa6325bcb8d3c07805583fe12153f08a41e2b"
+  revision = "074acd46bca67915925527c07849494d115e7c43"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -534,9 +534,6 @@
     "github.com/nuvo/skbn/pkg/skbn",
     "github.com/spf13/cobra",
     "k8s.io/apimachinery/pkg/apis/meta/v1",
-    "k8s.io/client-go/kubernetes",
-    "k8s.io/client-go/rest",
-    "k8s.io/client-go/tools/clientcmd",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
