@@ -197,15 +197,15 @@
   version = "1.0.1"
 
 [[projects]]
-  branch = "master"
-  digest = "1:33c67eba21f0977950276111cce50b667a9463bedecb5318749880a39ba0ecd6"
+  digest = "1:346329adc4312b9865e34343623136788661ef30e2940a81818a6ad10de97494"
   name = "github.com/nuvo/skbn"
   packages = [
     "pkg/skbn",
     "pkg/utils",
   ]
   pruneopts = "UT"
-  revision = "2a81cc4316ffbe6ef3d24b5dcc197091cdb86bec"
+  revision = "42781bdb9d5cd81fcda5a6ac44a17e0480fb0e94"
+  version = "0.4.2"
 
 [[projects]]
   branch = "master"
